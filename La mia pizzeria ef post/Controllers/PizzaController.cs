@@ -1,5 +1,6 @@
 ﻿using La_mia_pizzeria_ef_post.Database;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Microsoft.JSInterop.Infrastructure;
 using NetCore_01.Models;
 
@@ -58,6 +59,45 @@ namespace La_mia_pizzeria_ef_post.Controllers {
             }
 
             return RedirectToAction("Index");
-        }   
+        }
+
+        [HttpGet]
+        public IActionResult Update(int id) {
+            using (PizzaContext db = new PizzaContext()) {
+                Pizza pizzaToUpdate = db.Pizze.Where(pizza => pizza.Id == id).FirstOrDefault();
+
+                if (pizzaToUpdate == null) {
+                    return NotFound("Il post non è stato trovato");
+                }
+
+                return View("Update", pizzaToUpdate);
+            }
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Update(Pizza pizzaData) {
+            if (!ModelState.IsValid) {
+                return View("Update", pizzaData);
+            }
+
+            using (PizzaContext db = new PizzaContext()) {
+                Pizza pizzaToUpdate = db.Pizze.Where(pizza => pizza.Id == pizzaData.Id).FirstOrDefault();
+
+                if (pizzaToUpdate != null) {
+                    pizzaToUpdate.Name = pizzaData.Name;
+                    pizzaToUpdate.Description = pizzaData.Description;
+                    pizzaToUpdate.Img = pizzaData.Img;
+
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index");
+                } else {
+                    return NotFound("La pizza che volevi modificare non è stato trovato!");
+                }
+            }
+
+        }
     }
 }
