@@ -94,10 +94,27 @@ namespace La_mia_pizzeria_ef_post.Controllers {
 
                     return RedirectToAction("Index");
                 } else {
-                    return NotFound("La pizza che volevi modificare non è stato trovato!");
+                    return NotFound("La pizza che volevi modificare non è stata trovata!");
                 }
             }
 
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id) {
+            using (PizzaContext db = new PizzaContext()) {
+                Pizza pizzaToDelete = db.Pizze.Where(pizza => pizza.Id == id).FirstOrDefault();
+
+                if (pizzaToDelete != null) {
+                    db.Pizze.Remove(pizzaToDelete);
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index");
+                } else {
+                    return NotFound("La pizza da eliminare non è stata trovata!");
+                }
+            }
         }
     }
 }
