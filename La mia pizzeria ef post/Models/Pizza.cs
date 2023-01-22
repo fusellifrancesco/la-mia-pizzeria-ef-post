@@ -5,6 +5,9 @@
         public string Description { get; set; }
         public string Img { get; }
 
+        public Pizza() { 
+        }
+
         public Pizza(int id, string name, string description, string img) {
             Id = id;
             Name = name;
