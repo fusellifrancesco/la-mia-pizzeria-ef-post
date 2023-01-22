@@ -38,3 +38,8 @@ body {
 .post-single-image-container {
     margin-bottom: 10px;
 }
+
+.miei-buttons {
+    display: flex;
+    margin: 5px;
+}
